@@ -12,6 +12,7 @@ User can:
 """
 
 from tkinter import *
+import backend
 
 window = Tk()
 
