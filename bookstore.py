@@ -43,5 +43,34 @@ isbn_text = StringVar()
 ent_isbn = Entry(window, textvariable=isbn_text)
 ent_isbn.grid(row=1, column=3)
 
+record_list = Listbox(window, height=6, width=35)
+record_list.grid(row=2, rowspan=6, columnspan=2)
+
+record_scrollbar = Scrollbar(window)
+record_scrollbar.grid(row=2, column=2, rowspan=6)
+
+record_list.configure(yscrollcommand=record_scrollbar.set)
+record_scrollbar.configure(command=record_list.yview)
+
+btn_view_all = Button(window, text="View All", width=12)
+btn_view_all.grid(row=2, column=3)
+
+btn_view_all = Button(window, text="Search entry", width=12)
+btn_view_all.grid(row=3, column=3)
+
+btn_view_all = Button(window, text="Add entry", width=12)
+btn_view_all.grid(row=4, column=3)
+
+btn_view_all = Button(window, text="Update entry", width=12)
+btn_view_all.grid(row=5, column=3)
+
+btn_view_all = Button(window, text="Delete entry", width=12)
+btn_view_all.grid(row=6, column=3)
+
+btn_view_all = Button(window, text="Close", width=12)
+btn_view_all.grid(row=7, column=3)
+
+btn_view_all = Button(window, text="View All", width=12)
+btn_view_all.grid(row=2, column=3)
 
 window.mainloop()
