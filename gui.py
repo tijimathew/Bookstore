@@ -20,9 +20,9 @@ def view_all():
         record_list.insert(END, row)
 
 def get_selected_row(event):
-    global g_selected_record
-    g_selected_index = record_list.curselection()[0]
-    g_selected_record = record_list.get(g_selected_index)
+    global g_selected_record 
+    selected_index = record_list.curselection()
+    g_selected_record = record_list.get(selected_index[0])
     ent_title.delete(0, END)
     ent_title.insert(END, g_selected_record[1])
     ent_author.delete(0, END)
@@ -44,13 +44,14 @@ def add_record():
 
 def delete_record():
     backend.delete(g_selected_record[0])
-    record_list.delete(g_selected_index)
 
 def update_record():
-    backend.update(g_selected_record[0], g_selected_record[1], g_selected_record[2], g_selected_record[3], g_selected_record[4])
+    backend.update(g_selected_record[0], title_text.get(), author_text.get(), year_text.get(), isbn_text.get())
 
 
 window = Tk()
+
+window.title("Bookstore")
 
 lbl_title = Label(window, text="Title")
 lbl_title.grid(row=0, column=0)
@@ -82,10 +83,7 @@ ent_isbn.grid(row=1, column=3)
 
 record_list = Listbox(window, height=6, width=35)
 record_list.grid(row=2, rowspan=6, columnspan=2)
-if record_list.size() > 0:
-    g_selected_index = 0
-else: 
-    g_selected_index = None
+
 
 record_scrollbar = Scrollbar(window)
 record_scrollbar.grid(row=2, column=2, rowspan=6)
@@ -110,7 +108,7 @@ btn_update.grid(row=5, column=3)
 btn_delete = Button(window, text="Delete selected", width=12, command=delete_record)
 btn_delete.grid(row=6, column=3)
 
-btn_close = Button(window, text="Close", width=12)
+btn_close = Button(window, text="Close", width=12, command=window.destroy)
 btn_close.grid(row=7, column=3)
 
 window.mainloop()
