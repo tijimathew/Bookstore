@@ -14,106 +14,111 @@ User can:
 from tkinter import *
 from backend import Database
 
-db = Database("books.db")
+class BookstoreApp:
 
-def view_all():
-    record_list.delete(0, END)
-    for row in db.view():
-        record_list.insert(END, row)
+    def __init__(self):    
+        self.db = Database("books.db")
 
-def get_selected_row(event):
-    try:
-        global g_selected_record 
-        selected_index = record_list.curselection()
-        g_selected_record = record_list.get(selected_index[0])
-        ent_title.delete(0, END)
-        ent_title.insert(END, g_selected_record[1])
-        ent_author.delete(0, END)
-        ent_author.insert(END, g_selected_record[2])
-        ent_year.delete(0, END)
-        ent_year.insert(END, g_selected_record[3])
-        ent_isbn.delete(0, END)
-        ent_isbn.insert(END, g_selected_record[4])
-    except IndexError:
-        pass
+        self.window = Tk()
 
-def search_list():
-    record_list.delete(0, END)
-    for row in db.search(title_text.get(), author_text.get(), year_text.get(), isbn_text.get()):
-        record_list.insert(END, row)
+        self.window.title("Bookstore")
 
-def add_record():
-    db.insert(title_text.get(), author_text.get(), year_text.get(), isbn_text.get())
-    record_list.delete(0, END)
-    record_list.insert(END, (title_text.get(), author_text.get(), year_text.get(), isbn_text.get()))
+        self.lbl_title = Label(self.window, text="Title")
+        self.lbl_title.grid(row=0, column=0)
 
-def delete_record():
-    db.delete(g_selected_record[0])
+        self.lbl_author = Label(self.window, text="Author")
+        self.lbl_author.grid(row=0, column=2)
 
-def update_record():
-    db.update(g_selected_record[0], title_text.get(), author_text.get(), year_text.get(), isbn_text.get())
+        self.lbl_year = Label(self.window, text="Year")
+        self.lbl_year.grid(row=1, column=0)
 
+        self.lbl_isbn = Label(self.window, text="ISBN")
+        self.lbl_isbn.grid(row=1, column=2)
 
-window = Tk()
+        self.title_text = StringVar()
+        self.ent_title = Entry(self.window, textvariable=self.title_text)
+        self.ent_title.grid(row=0, column=1)
 
-window.title("Bookstore")
+        self.author_text = StringVar()
+        self.ent_author = Entry(self.window, textvariable=self.author_text)
+        self.ent_author.grid(row=0, column=3)
 
-lbl_title = Label(window, text="Title")
-lbl_title.grid(row=0, column=0)
+        self.year_text = StringVar()
+        self.ent_year = Entry(self.window, textvariable=self.year_text)
+        self.ent_year.grid(row=1, column=1)
 
-lbl_author = Label(window, text="Author")
-lbl_author.grid(row=0, column=2)
+        self.isbn_text = StringVar()
+        self.ent_isbn = Entry(self.window, textvariable=self.isbn_text)
+        self.ent_isbn.grid(row=1, column=3)
 
-lbl_year = Label(window, text="Year")
-lbl_year.grid(row=1, column=0)
-
-lbl_isbn = Label(window, text="ISBN")
-lbl_isbn.grid(row=1, column=2)
-
-title_text = StringVar()
-ent_title = Entry(window, textvariable=title_text)
-ent_title.grid(row=0, column=1)
-
-author_text = StringVar()
-ent_author = Entry(window, textvariable=author_text)
-ent_author.grid(row=0, column=3)
-
-year_text = StringVar()
-ent_year = Entry(window, textvariable=year_text)
-ent_year.grid(row=1, column=1)
-
-isbn_text = StringVar()
-ent_isbn = Entry(window, textvariable=isbn_text)
-ent_isbn.grid(row=1, column=3)
-
-record_list = Listbox(window, height=6, width=35)
-record_list.grid(row=2, rowspan=6, columnspan=2)
+        self.record_list = Listbox(self.window, height=6, width=35)
+        self.record_list.grid(row=2, rowspan=6, columnspan=2)
 
 
-record_scrollbar = Scrollbar(window)
-record_scrollbar.grid(row=2, column=2, rowspan=6)
+        self.record_scrollbar = Scrollbar(self.window)
+        self.record_scrollbar.grid(row=2, column=2, rowspan=6)
 
-record_list.configure(yscrollcommand=record_scrollbar.set)
-record_scrollbar.configure(command=record_list.yview)
+        self.record_list.configure(yscrollcommand=self.record_scrollbar.set)
+        self.record_scrollbar.configure(command=self.record_list.yview)
 
-record_list.bind('<<ListboxSelect>>', get_selected_row)
+        self.record_list.bind('<<ListboxSelect>>', self.get_selected_row)
 
-btn_view_all = Button(window, text="View All", width=12, command=view_all)
-btn_view_all.grid(row=2, column=3)
+        self.btn_view_all = Button(self.window, text="View All", width=12, command=self.view_all)
+        self.btn_view_all.grid(row=2, column=3)
 
-btn_search = Button(window, text="Search entry", width=12, command=search_list)
-btn_search.grid(row=3, column=3)
+        self.btn_search = Button(self.window, text="Search entry", width=12, command=self.search_list)
+        self.btn_search.grid(row=3, column=3)
 
-btn_add = Button(window, text="Add entry", width=12, command=add_record)
-btn_add.grid(row=4, column=3)
+        self.btn_add = Button(self.window, text="Add entry", width=12, command=self.add_record)
+        self.btn_add.grid(row=4, column=3)
 
-btn_update = Button(window, text="Update selected", width=12, command=update_record)
-btn_update.grid(row=5, column=3)
+        self.btn_update = Button(self.window, text="Update selected", width=12, command=self.update_record)
+        self.btn_update.grid(row=5, column=3)
 
-btn_delete = Button(window, text="Delete selected", width=12, command=delete_record)
-btn_delete.grid(row=6, column=3)
+        self.btn_delete = Button(self.window, text="Delete selected", width=12, command=self.delete_record)
+        self.btn_delete.grid(row=6, column=3)
 
-btn_close = Button(window, text="Close", width=12, command=window.destroy)
-btn_close.grid(row=7, column=3)
+        self.btn_close = Button(self.window, text="Close", width=12, command=self.window.destroy)
+        self.btn_close.grid(row=7, column=3)
 
-window.mainloop()
+        self.window.mainloop()
+
+    def view_all(self):
+        self.record_list.delete(0, END)
+        for row in self.db.view():
+            self.record_list.insert(END, row)
+
+    def get_selected_row(self, event):
+        try:
+            global g_selected_record 
+            selected_index = self.record_list.curselection()
+            g_selected_record = self.record_list.get(selected_index[0])
+            self.ent_title.delete(0, END)
+            self.ent_title.insert(END, g_selected_record[1])
+            self.ent_author.delete(0, END)
+            self.ent_author.insert(END, g_selected_record[2])
+            self.ent_year.delete(0, END)
+            self.ent_year.insert(END, g_selected_record[3])
+            self.ent_isbn.delete(0, END)
+            self.ent_isbn.insert(END, g_selected_record[4])
+        except IndexError:
+            pass
+
+    def search_list(self):
+        self.record_list.delete(0, END)
+        for row in self.db.search(self.title_text.get(), self.author_text.get(), self.year_text.get(), self.isbn_text.get()):
+            self.record_list.insert(END, row)
+
+    def add_record(self):
+        self.db.insert(self.title_text.get(), self.author_text.get(), self.year_text.get(), self.isbn_text.get())
+        self.record_list.delete(0, END)
+        self.record_list.insert(END, (self.title_text.get(), self.author_text.get(), self.year_text.get(), self.isbn_text.get()))
+
+    def delete_record(self):
+        self.db.delete(g_selected_record[0])
+
+    def update_record(self):
+        self.db.update(g_selected_record[0], self.title_text.get(), self.author_text.get(), self.year_text.get(), self.isbn_text.get())
+
+
+BookstoreApp()
