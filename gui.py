@@ -12,11 +12,13 @@ User can:
 """
 
 from tkinter import *
-import backend
+from backend import Database
+
+db = Database("books.db")
 
 def view_all():
     record_list.delete(0, END)
-    for row in backend.view():
+    for row in db.view():
         record_list.insert(END, row)
 
 def get_selected_row(event):
@@ -37,19 +39,19 @@ def get_selected_row(event):
 
 def search_list():
     record_list.delete(0, END)
-    for row in backend.search(title_text.get(), author_text.get(), year_text.get(), isbn_text.get()):
+    for row in db.search(title_text.get(), author_text.get(), year_text.get(), isbn_text.get()):
         record_list.insert(END, row)
 
 def add_record():
-    backend.insert(title_text.get(), author_text.get(), year_text.get(), isbn_text.get())
+    db.insert(title_text.get(), author_text.get(), year_text.get(), isbn_text.get())
     record_list.delete(0, END)
     record_list.insert(END, (title_text.get(), author_text.get(), year_text.get(), isbn_text.get()))
 
 def delete_record():
-    backend.delete(g_selected_record[0])
+    db.delete(g_selected_record[0])
 
 def update_record():
-    backend.update(g_selected_record[0], title_text.get(), author_text.get(), year_text.get(), isbn_text.get())
+    db.update(g_selected_record[0], title_text.get(), author_text.get(), year_text.get(), isbn_text.get())
 
 
 window = Tk()
