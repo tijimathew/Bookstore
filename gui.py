@@ -14,11 +14,14 @@ User can:
 from tkinter import *
 from backend import Database
 
+database = Database("books.db")
+
 class BookstoreApp:
 
-    def __init__(self):    
-        self.db = Database("books.db")
-
+    def __init__(self, db):    
+        
+        self.db = db
+        
         self.window = Tk()
 
         self.window.title("Bookstore")
@@ -121,4 +124,4 @@ class BookstoreApp:
         self.db.update(g_selected_record[0], self.title_text.get(), self.author_text.get(), self.year_text.get(), self.isbn_text.get())
 
 
-BookstoreApp()
+BookstoreApp(database)
