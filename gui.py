@@ -14,6 +14,42 @@ User can:
 from tkinter import *
 import backend
 
+def view_all():
+    record_list.delete(0, END)
+    for row in backend.view():
+        record_list.insert(END, row)
+
+def get_selected_row(event):
+    global g_selected_record
+    g_selected_index = record_list.curselection()[0]
+    g_selected_record = record_list.get(g_selected_index)
+    ent_title.delete(0, END)
+    ent_title.insert(END, g_selected_record[1])
+    ent_author.delete(0, END)
+    ent_author.insert(END, g_selected_record[2])
+    ent_year.delete(0, END)
+    ent_year.insert(END, g_selected_record[3])
+    ent_isbn.delete(0, END)
+    ent_isbn.insert(END, g_selected_record[4])
+
+def search_list():
+    record_list.delete(0, END)
+    for row in backend.search(title_text.get(), author_text.get(), year_text.get(), isbn_text.get()):
+        record_list.insert(END, row)
+
+def add_record():
+    backend.insert(title_text.get(), author_text.get(), year_text.get(), isbn_text.get())
+    record_list.delete(0, END)
+    record_list.insert(END, (title_text.get(), author_text.get(), year_text.get(), isbn_text.get()))
+
+def delete_record():
+    backend.delete(g_selected_record[0])
+    record_list.delete(g_selected_index)
+
+def update_record():
+    backend.update(g_selected_record[0], g_selected_record[1], g_selected_record[2], g_selected_record[3], g_selected_record[4])
+
+
 window = Tk()
 
 lbl_title = Label(window, text="Title")
@@ -46,6 +82,10 @@ ent_isbn.grid(row=1, column=3)
 
 record_list = Listbox(window, height=6, width=35)
 record_list.grid(row=2, rowspan=6, columnspan=2)
+if record_list.size() > 0:
+    g_selected_index = 0
+else: 
+    g_selected_index = None
 
 record_scrollbar = Scrollbar(window)
 record_scrollbar.grid(row=2, column=2, rowspan=6)
@@ -53,25 +93,24 @@ record_scrollbar.grid(row=2, column=2, rowspan=6)
 record_list.configure(yscrollcommand=record_scrollbar.set)
 record_scrollbar.configure(command=record_list.yview)
 
-btn_view_all = Button(window, text="View All", width=12)
+record_list.bind('<<ListboxSelect>>', get_selected_row)
+
+btn_view_all = Button(window, text="View All", width=12, command=view_all)
 btn_view_all.grid(row=2, column=3)
 
-btn_view_all = Button(window, text="Search entry", width=12)
-btn_view_all.grid(row=3, column=3)
+btn_search = Button(window, text="Search entry", width=12, command=search_list)
+btn_search.grid(row=3, column=3)
 
-btn_view_all = Button(window, text="Add entry", width=12)
-btn_view_all.grid(row=4, column=3)
+btn_add = Button(window, text="Add entry", width=12, command=add_record)
+btn_add.grid(row=4, column=3)
 
-btn_view_all = Button(window, text="Update entry", width=12)
-btn_view_all.grid(row=5, column=3)
+btn_update = Button(window, text="Update selected", width=12, command=update_record)
+btn_update.grid(row=5, column=3)
 
-btn_view_all = Button(window, text="Delete entry", width=12)
-btn_view_all.grid(row=6, column=3)
+btn_delete = Button(window, text="Delete selected", width=12, command=delete_record)
+btn_delete.grid(row=6, column=3)
 
-btn_view_all = Button(window, text="Close", width=12)
-btn_view_all.grid(row=7, column=3)
-
-btn_view_all = Button(window, text="View All", width=12)
-btn_view_all.grid(row=2, column=3)
+btn_close = Button(window, text="Close", width=12)
+btn_close.grid(row=7, column=3)
 
 window.mainloop()

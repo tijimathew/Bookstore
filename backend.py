@@ -45,3 +45,4 @@ def search(title="", author="", year="", isbn=""):
     return rows
 
 connect()
+#print(view())
