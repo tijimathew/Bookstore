@@ -20,17 +20,20 @@ def view_all():
         record_list.insert(END, row)
 
 def get_selected_row(event):
-    global g_selected_record 
-    selected_index = record_list.curselection()
-    g_selected_record = record_list.get(selected_index[0])
-    ent_title.delete(0, END)
-    ent_title.insert(END, g_selected_record[1])
-    ent_author.delete(0, END)
-    ent_author.insert(END, g_selected_record[2])
-    ent_year.delete(0, END)
-    ent_year.insert(END, g_selected_record[3])
-    ent_isbn.delete(0, END)
-    ent_isbn.insert(END, g_selected_record[4])
+    try:
+        global g_selected_record 
+        selected_index = record_list.curselection()
+        g_selected_record = record_list.get(selected_index[0])
+        ent_title.delete(0, END)
+        ent_title.insert(END, g_selected_record[1])
+        ent_author.delete(0, END)
+        ent_author.insert(END, g_selected_record[2])
+        ent_year.delete(0, END)
+        ent_year.insert(END, g_selected_record[3])
+        ent_isbn.delete(0, END)
+        ent_isbn.insert(END, g_selected_record[4])
+    except IndexError:
+        pass
 
 def search_list():
     record_list.delete(0, END)
